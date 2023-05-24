@@ -8,7 +8,6 @@ import java.util.List;
 public class Card {
     private Rank rank;
     private Suit suit;
-
     private Boolean used;
 
     public Card(Rank rank, Suit suit) {

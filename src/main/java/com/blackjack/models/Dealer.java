@@ -15,10 +15,6 @@ public class Dealer extends Player {
         this.deck = new Deck();
     }
 
-    public void addCardToHand(Card card) {
-        getHand().addCard(card);
-    }
-
     public boolean shouldHit() {
         return getHandValue() < 17;
     }

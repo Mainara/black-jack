@@ -19,8 +19,8 @@ public class MovesController {
     @Autowired
     MovesService movesService;
 
-    @GetMapping("/deck")
-    public ResponseEntity<List<Card>> getDeck() {
-        return new ResponseEntity<>(movesService.getDeck(), HttpStatus.OK);
-    }
+//    @GetMapping("/deck")
+//    public ResponseEntity<List<Card>> getDeck() {
+//        return new ResponseEntity<>(movesService.getDeck(), HttpStatus.OK);
+//    }
 }
