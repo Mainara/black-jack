@@ -6,6 +6,7 @@ import com.blackjack.enums.Suit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class Deck {
     private List<Card> cards;
@@ -21,6 +22,14 @@ public class Deck {
                 cards.add(new Card(rank, suit));
             }
         }
+    }
+
+    public Card getCard() {
+        if (cards.isEmpty()) {
+            throw new NoSuchElementException("No more cards available");
+        }
+
+        return cards.remove(0);
     }
 
     public List<Card> getCards() {
