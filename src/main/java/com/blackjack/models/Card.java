@@ -9,11 +9,13 @@ public class Card {
     private Rank rank;
     private Suit suit;
     private Boolean used;
+    private Boolean revealed;
 
     public Card(Rank rank, Suit suit) {
         this.rank = rank;
         this.suit = suit;
         this.used = false;
+        this.revealed = true;
     }
 
     public Rank getRank() {
@@ -43,4 +45,13 @@ public class Card {
     public void setUsed(Boolean used) {
         this.used = used;
     }
+
+    public Boolean getRevealed() {
+        return revealed;
+    }
+
+    public void setRevealed(Boolean revealed) {
+        this.revealed = revealed;
+    }
+
 }

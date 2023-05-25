@@ -2,6 +2,7 @@ package com.blackjack.services;
 
 import com.blackjack.models.Card;
 import com.blackjack.models.Dealer;
+import com.blackjack.models.Deck;
 import com.blackjack.models.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,28 +15,23 @@ public class DealerService {
     @Autowired
     Dealer dealer;
 
-    @Autowired
-    Player player;
+    public List<Card> play() {
+        Deck deck = dealer.getDeck();
 
-    public Map<String, List<Card>> initGame() {
-        List<Card> deck = dealer.getDeck().getCards();
-        Collections.shuffle(deck);
+        while (dealer.shouldHit()) {
+            dealer.addCardToHand(deck.getCard());
+        }
 
-        dealer.addCardToHand(deck.get(0));
-        dealer.addCardToHand(deck.get(1));
-
-        player.addCardToHand(deck.get(2));
-        player.addCardToHand(deck.get(3));
-
-        Map<String, List<Card>> firstCards = new HashMap<>();
-        firstCards.put("dealerCards", dealer.getHand().getCards());
-        firstCards.put("playerCards", player.getHand().getCards());
-
-        return firstCards;
+        return dealer.getHand().getCards();
     }
 
-    public List<Card> getDeck() {
-        List<Card> deck = dealer.getDeck().getCards();
-        return deck;
+    public Card revealCard() {
+        try {
+
+            Card card = dealer.revealCard();
+            return card;
+        } catch (IndexOutOfBoundsException e) {
+            throw new IllegalStateException("all the dealer's cards have already been revealed");
+        }
     }
 }

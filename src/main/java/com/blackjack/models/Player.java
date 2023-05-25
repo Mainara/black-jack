@@ -24,8 +24,17 @@ public class Player {
         return hand;
     }
 
+    public void clearHand() {
+        getHand().getCards().clear();
+    }
+
     public void addCardToHand(Card card) {
         hand.addCard(card);
+
+        if (hand.getHandValue() > 21) {
+            throw new IllegalStateException("The sum points exceeded 21 points");
+        }
+
         card.setUsed(true);
     }
 

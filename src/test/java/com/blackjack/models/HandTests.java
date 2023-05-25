@@ -11,15 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class HandTests {
 
-    Hand hand;
+    private Hand hand;
 
     @BeforeEach
-    void init() {
+    public void init() {
         hand = new Hand();
     }
 
     @Test
-    void givingOneCard_whenCallingGetHandValue_thenShouldReturnCardValue() {
+    public void givingOneCard_whenCallingGetHandValue_thenShouldReturnCardValue() {
         assertEquals(hand.getHandValue(), 0);
 
         Card card = new Card(Rank.REI, Suit.COPAS);
@@ -28,7 +28,7 @@ public class HandTests {
     }
 
     @Test
-    void givingMoreThanOneCard_whenCallingGetHandValue_thenShouldSumOfValues() {
+    public void givingMoreThanOneCard_whenCallingGetHandValue_thenShouldSumOfValues() {
         assertEquals(hand.getHandValue(), 0);
 
         Card card1 = new Card(Rank.REI, Suit.COPAS);
@@ -41,7 +41,7 @@ public class HandTests {
     }
 
     @Test
-    void givingAsCard_whenCallingGetHandValue_thenAsValueShouldBe1() {
+    public void givingAsCard_whenCallingGetHandValue_thenAsValueShouldBe1() {
         assertEquals(hand.getHandValue(), 0);
 
         Card card1 = new Card(Rank.REI, Suit.COPAS);
@@ -55,7 +55,7 @@ public class HandTests {
 
 
     @Test
-    void givingAsCard_whenCallingGetHandValue_thenAsValueShouldBe11() {
+    public void givingAsCard_whenCallingGetHandValue_thenAsValueShouldBe11() {
         assertEquals(hand.getHandValue(), 0);
 
         Card card1 = new Card(Rank.DEZ, Suit.COPAS);
@@ -68,7 +68,7 @@ public class HandTests {
     }
 
     @Test
-    void givingTwoAsCard_whenCallingGetHandValue_thenOneValueShouldBe11AndOther1() {
+    public void givingTwoAsCard_whenCallingGetHandValue_thenOneValueShouldBe11AndOther1() {
         assertEquals(hand.getHandValue(), 0);
 
         Card card1 = new Card(Rank.AS, Suit.COPAS);

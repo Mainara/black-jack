@@ -11,20 +11,20 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DeckTests {
 
     @Test
-    void givenADeck_whenInstantiating_thenShouldInitiateDeckWith52Cards() {
+    public void givenADeck_whenInstantiating_thenShouldInitiateDeckWith52Cards() {
         Deck deck = new Deck();
         assertEquals(deck.getCards().size(), 52);
     }
 
     @Test
-    void givenADeckWithCards_whenGetCard_thenShouldReturnCard() {
+    public void givenADeckWithCards_whenGetCard_thenShouldReturnCard() {
         Deck deck = new Deck();
         Card card = deck.getCard();
         assertFalse(card.getUsed());
     }
 
     @Test
-    void givenADeckWithNoCards_whenGetCard_thenShouldThrowsException() {
+    public void givenADeckWithNoCards_whenGetCard_thenShouldThrowsException() {
         Deck deck = new Deck();
 
         for (int i = 0; i <= 51; i++) {
