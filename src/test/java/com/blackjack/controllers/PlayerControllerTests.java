@@ -3,9 +3,10 @@ package com.blackjack.controllers;
 import com.blackjack.enums.Rank;
 import com.blackjack.enums.Suit;
 import com.blackjack.models.Card;
-import com.blackjack.models.Player;
+import com.blackjack.services.GameService;
 import com.blackjack.services.PlayerService;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -31,23 +32,41 @@ public class PlayerControllerTests {
     @MockBean
     private PlayerService playerService;
 
-    @Test
-    public void whenHit_thenStatus200() throws Exception {
-        Card card1 = new Card(Rank.REI, Suit.COPAS);
+    @MockBean
+    private GameService gameService;
 
-        Mockito.when(playerService.hit()).thenReturn(card1);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/hit"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.rank", Matchers.equalTo(card1.getRank().getLabel())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.suit", Matchers.equalTo(card1.getSuit().getLabel())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.used", Matchers.equalTo(card1.getUsed())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.revealed", Matchers.equalTo(card1.getRevealed())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.values", Matchers.equalTo(card1.getValues())));
+    @AfterEach
+    public void finishGame() {
+        gameService.setGameStarted(false);
     }
 
     @Test
-    public void whenStand_thenStatus200() throws Exception {
+    public void givingAStartedGame_whenHit_thenStatus200() throws Exception {
+        gameService.setGameStarted(true);
+        Card card1 = new Card(Rank.REI, Suit.COPAS);
+        Map<String, Object> result = new HashMap<>();
+        result.put("gameIsFinished", false);
+        result.put("card", card1);
+
+        Mockito.when(playerService.hit()).thenReturn(result);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/hit"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.gameIsFinished", Matchers.equalTo(false)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.card", Matchers.notNullValue()));
+    }
+
+    @Test
+    public void givingNotStartedGame_whenHit_thenStatus403() throws Exception {
+        Mockito.when(playerService.hit()).thenThrow(new IllegalStateException());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/hit"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    public void givingAStartedGame_whenStand_thenStatus200() throws Exception {
+        gameService.setGameStarted(true);
         Card card = new Card(Rank.REI, Suit.COPAS);
 
         Mockito.when(playerService.stand()).thenReturn(Arrays.asList(card));
@@ -61,6 +80,15 @@ public class PlayerControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/player/stand"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.equalToObject(Arrays.asList(cardProperties))));
+
+    }
+
+    @Test
+    public void givingNotStartedGame_whenStand_thenStatus403() throws Exception {
+        Mockito.when(playerService.stand()).thenThrow(new IllegalStateException());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/player/stand"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
 
     }
 }

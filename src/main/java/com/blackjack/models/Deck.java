@@ -4,7 +4,6 @@ import com.blackjack.enums.Rank;
 import com.blackjack.enums.Suit;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 

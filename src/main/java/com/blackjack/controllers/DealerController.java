@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/dealer")
@@ -18,12 +18,19 @@ public class DealerController {
     DealerService dealerService;
 
     @PostMapping("/play")
-    public ResponseEntity<List<Card>> play() {
-        return new ResponseEntity<>(dealerService.play(), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> play() {
+        try {
+            return new ResponseEntity<>(dealerService.play(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @PostMapping("/reveal")
     public ResponseEntity<Card> reveal() {
-        return new ResponseEntity<>(dealerService.revealCard(), HttpStatus.OK);
-    }
+        try {
+            return new ResponseEntity<>(dealerService.revealCard(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }    }
 }

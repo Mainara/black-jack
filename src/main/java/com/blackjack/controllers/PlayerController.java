@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/player")
@@ -18,12 +19,20 @@ public class PlayerController {
     PlayerService playerService;
 
     @PostMapping("/hit")
-    public ResponseEntity<Card> hit() {
-        return new ResponseEntity<>(playerService.hit(), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> hit() {
+        try {
+            return new ResponseEntity<>(playerService.hit(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @PostMapping("/stand")
-    public ResponseEntity<List<Card>> hand() {
-        return new ResponseEntity<>(playerService.stand(), HttpStatus.OK);
+    public ResponseEntity<List<Card>> stand() {
+        try {
+            return new ResponseEntity<>(playerService.stand(), HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 }

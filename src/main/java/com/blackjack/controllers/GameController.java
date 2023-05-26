@@ -22,12 +22,16 @@ public class GameController {
 	GameService gameService;
 
 	@PostMapping("/init")
-	public ResponseEntity<Map<String, List<Card>>> initGame() {
+	public ResponseEntity<Map<String, Object>> initGame() {
 		return new ResponseEntity<>(gameService.initGame(), HttpStatus.OK);
 	}
 
 	@GetMapping("/status")
-	public ResponseEntity<Map<String, Integer>> gameStatus() {
-		return new ResponseEntity<>(gameService.getStatus(), HttpStatus.OK);
+	public ResponseEntity<Map<String, Object>> gameStatus() {
+		try {
+			return new ResponseEntity<>(gameService.getStatus(), HttpStatus.OK);
+		} catch (IllegalStateException e) {
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 	}
 }
