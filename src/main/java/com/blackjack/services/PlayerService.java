@@ -3,6 +3,8 @@ package com.blackjack.services;
 import com.blackjack.models.Card;
 import com.blackjack.models.Dealer;
 import com.blackjack.models.Player;
+import com.blackjack.useCases.PlayerHitUseCase;
+import com.blackjack.useCases.PlayerStandUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,42 +14,29 @@ import java.util.Map;
 
 @Service
 public class PlayerService {
-
     @Autowired
-    Dealer dealer;
-
+    private Player player;
     @Autowired
-    Player player;
+    private  GameService gameService;
     @Autowired
-    GameService gameService;
+    private PlayerHitUseCase playerHitUseCase;
+    @Autowired
+    private PlayerStandUseCase playerStandUseCase;
 
     public Map<String, Object> hit() {
         if (gameService.isGameStarted()) {
-            Map<String, Object> result = new HashMap<>();
-
-            try {
-                Card card = dealer.getDeck().getCard();
-                player.addCardToHand(card);
-                result.put("card", card);
-                result.put("gameIsFinished", false);
-            } catch (IllegalStateException e) {
-                result.put("gameIsFinished", true);
-                gameService.setGameStarted(false);
-            }
-
-            result.put("playerPoints", player.getHandValue());
-            return result;
+            return playerHitUseCase.hit(player, gameService);
         } else {
             throw new IllegalStateException("The game has not started");
         }
     }
 
-
     public List<Card> stand() {
         if (gameService.isGameStarted()) {
-            return player.getHand().getCards();
+            return playerStandUseCase.stand(player);
         } else {
             throw new IllegalStateException("The game has not started");
         }
     }
 }
+

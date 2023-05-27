@@ -1,7 +1,9 @@
 package com.blackjack.controllers;
 
+import com.blackjack.errors.ErrorResponse;
 import com.blackjack.models.Card;
 import com.blackjack.services.DealerService;
+import com.blackjack.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +20,25 @@ public class DealerController {
     DealerService dealerService;
 
     @PostMapping("/play")
-    public ResponseEntity<Map<String, Object>> play() {
+    public ResponseEntity<?> play() {
         try {
-            return new ResponseEntity<>(dealerService.play(), HttpStatus.OK);
+            Map<String, Object> responseData = dealerService.play();
+            Response<Map<String, Object>> response = new Response<>(responseData);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
         }
     }
 
     @PostMapping("/reveal")
-    public ResponseEntity<Card> reveal() {
+    public ResponseEntity<?> reveal() {
         try {
-            return new ResponseEntity<>(dealerService.revealCard(), HttpStatus.OK);
+            Card revealedCard = dealerService.revealCard();
+            return new ResponseEntity<>(revealedCard, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }    }
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+        }
+    }
 }

@@ -41,7 +41,8 @@ public class DealerServiceTests {
     @Test
     public void whenCallingPlay_thenDealerShouldAddCardToHand() {
         assertTrue(dealer.getHand().getCards().size() == 0);
-
+        Card card = new Card(Rank.AS, Suit.COPAS);
+        dealer.addCardToHand(card);
         Map<String, Object> result = dealerService.play();
         List<Object> dealerCards = (List<Object>) result.get("dealerCards");
 

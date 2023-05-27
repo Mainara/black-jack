@@ -1,5 +1,6 @@
 package com.blackjack.controllers;
 
+import com.blackjack.errors.ErrorResponse;
 import com.blackjack.models.Card;
 import com.blackjack.services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +20,26 @@ public class PlayerController {
     PlayerService playerService;
 
     @PostMapping("/hit")
-    public ResponseEntity<Map<String, Object>> hit() {
+    public ResponseEntity<?> hit() {
         try {
-            return new ResponseEntity<>(playerService.hit(), HttpStatus.OK);
+            Map<String, Object> hitResult = playerService.hit();
+            return new ResponseEntity<>(hitResult, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
         }
     }
 
+
     @PostMapping("/stand")
-    public ResponseEntity<List<Card>> stand() {
+    public ResponseEntity<?> stand() {
         try {
-            return new ResponseEntity<>(playerService.stand(), HttpStatus.OK);
+            List<Card> standResult = playerService.stand();
+            return new ResponseEntity<>(standResult, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
         }
     }
+
 }

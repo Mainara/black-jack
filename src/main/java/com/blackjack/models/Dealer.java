@@ -30,16 +30,18 @@ public class Dealer extends Player {
 
     public List<Card> getRevealedCards() {
         List<Card> filteredCards = filterByRevealed(true);
-
         return filteredCards;
     }
 
     public Card revealCard() {
         List<Card> filteredCards = filterByRevealed(false);
-
         Card card = filteredCards.get(0);
         card.setRevealed(true);
         return card;
+    }
+
+    public void resetDeck() {
+        deck.resetDeck();
     }
 
     private List<Card> filterByRevealed(boolean condition) {
@@ -48,6 +50,7 @@ public class Dealer extends Player {
         List<Card> filteredCards = getHand().getCards().stream()
                 .filter(byRevealed)
                 .collect(Collectors.toList());
+
         return filteredCards;
     }
 }

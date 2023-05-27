@@ -1,7 +1,6 @@
 package com.blackjack.controllers;
 
-import com.blackjack.models.Card;
-import com.blackjack.services.DealerService;
+import com.blackjack.errors.ErrorResponse;
 import com.blackjack.services.GameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -27,11 +25,14 @@ public class GameController {
 	}
 
 	@GetMapping("/status")
-	public ResponseEntity<Map<String, Object>> gameStatus() {
+	public ResponseEntity<?> gameStatus() {
 		try {
-			return new ResponseEntity<>(gameService.getStatus(), HttpStatus.OK);
+			Map<String, Object> gameStatus = gameService.getStatus();
+			return new ResponseEntity<>(gameStatus, HttpStatus.OK);
 		} catch (IllegalStateException e) {
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+			return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
 		}
 	}
+
 }

@@ -1,14 +1,10 @@
 package com.blackjack.services;
 
-import com.blackjack.models.Card;
 import com.blackjack.models.Dealer;
 import com.blackjack.models.Player;
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.Assert.assertThat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

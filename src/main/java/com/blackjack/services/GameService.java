@@ -3,6 +3,8 @@ package com.blackjack.services;
 import com.blackjack.models.Card;
 import com.blackjack.models.Dealer;
 import com.blackjack.models.Player;
+import com.blackjack.useCases.GameInitializationUseCase;
+import com.blackjack.useCases.GameStatusUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,28 +15,19 @@ import java.util.Map;
 public class GameService {
     @Autowired
     private Dealer dealer;
-
     @Autowired
     private Player player;
+    @Autowired
+    private GameInitializationUseCase gameInitializationUseCase;
+    @Autowired
+    private GameStatusUseCase gameStatusUseCase;
+
     private boolean isStarted = false;
 
     public Map<String, Object> initGame() {
-        setGameStarted(true);
-        dealer.shuffleDeck();
-
-        Card dealerHiddenCard = dealer.getDeck().getCard();
-        dealerHiddenCard.setRevealed(false);
+        startGame();
 
         Map<String, Object> result = new HashMap<>();
-        try {
-            dealer.addCardToHand(dealerHiddenCard);
-            dealer.addCardToHand(dealer.getDeck().getCard());
-            player.addCardToHand(dealer.getDeck().getCard());
-            player.addCardToHand(dealer.getDeck().getCard());
-        } catch (IllegalStateException e) {
-            setGameStarted(false);
-        }
-
         result.put("dealerCards", dealer.getRevealedCards());
         result.put("playerCards", player.getHand().getCards());
         result.put("gameIsFinished", !isStarted);
@@ -43,18 +36,16 @@ public class GameService {
     }
 
     public Map<String, Object> getStatus() {
-        if (isStarted) {
-            Map<String, Object> result = new HashMap<>();
-            result.put("dealerPoints", dealer.getHandValue());
-            result.put("playerPoints", player.getHandValue());
+        return gameStatusUseCase.getStatus(dealer, player, isStarted);
+    }
 
-            String currentWinner =  dealer.getHandValue() > player.getHandValue() ? "dealer" : "player";
-            result.put("currentWinner", currentWinner);
-
-            return result;
-        } else {
-            throw new IllegalStateException("The game has not started");
-        }
+    private void startGame() {
+        setGameStarted(true);
+        dealer.clearHand();
+        player.clearHand();
+        dealer.resetDeck();
+        dealer.shuffleDeck();
+        gameInitializationUseCase.initializeGame();
     }
 
     public void setGameStarted(boolean started) {
@@ -63,5 +54,9 @@ public class GameService {
 
     public boolean isGameStarted() {
         return isStarted;
+    }
+
+    public Card getCard() {
+        return dealer.getDeck().getCard();
     }
 }

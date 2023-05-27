@@ -55,9 +55,9 @@ public class DealerControllerTests {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/dealer/play"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.dealerBusted", Matchers.equalTo(false)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.dealerCards", Matchers.hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.gameIsFinished", Matchers.equalTo(true)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.dealerBusted", Matchers.equalTo(false)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.dealerCards", Matchers.hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.gameIsFinished", Matchers.equalTo(true)));
     }
 
     @Test

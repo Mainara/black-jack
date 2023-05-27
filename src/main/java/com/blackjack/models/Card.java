@@ -53,5 +53,4 @@ public class Card {
     public void setRevealed(Boolean revealed) {
         this.revealed = revealed;
     }
-
 }
