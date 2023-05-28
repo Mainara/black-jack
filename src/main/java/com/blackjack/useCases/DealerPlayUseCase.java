@@ -4,6 +4,7 @@ import com.blackjack.models.Card;
 import com.blackjack.models.Dealer;
 import com.blackjack.models.Deck;
 import com.blackjack.repositories.DealerRepository;
+import com.blackjack.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ public class DealerPlayUseCase {
     @Autowired
     private DealerRepository dealerRepository;
 
-    public Map<String, Object> play() {
+    public Map<String, Object> play(GameService gameService) {
         Dealer dealer = dealerRepository.getDealer();
         Map<String, Object> result = new HashMap<>();
 
@@ -34,7 +35,7 @@ public class DealerPlayUseCase {
         dealerRepository.saveDealer(dealer);
 
         result.put("dealerCards", dealer.getHand().getCards());
-        result.put("dealerPoints", dealer.getHandValue());
+        result.put("status", gameService.getStatus());
         result.put("gameIsFinished", true);
 
         return result;

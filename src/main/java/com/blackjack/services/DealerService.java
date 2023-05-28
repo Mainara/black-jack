@@ -21,7 +21,7 @@ public class DealerService {
     private ShuffleUseCase shuffleUseCase;
     public Map<String, Object> play() {
         if (gameService.isGameStarted()) {
-            return dealerPlayUseCase.play();
+            return dealerPlayUseCase.play(gameService);
         } else {
             throw new IllegalStateException("The game has not started");
         }

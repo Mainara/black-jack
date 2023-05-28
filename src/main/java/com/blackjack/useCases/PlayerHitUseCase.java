@@ -29,7 +29,7 @@ public class PlayerHitUseCase {
             gameService.setGameStarted(false);
         }
 
-        result.put("playerPoints", player.getHandValue());
+        result.put("status", gameService.getStatus());
         return result;
     }
 }

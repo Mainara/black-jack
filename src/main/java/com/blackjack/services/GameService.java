@@ -25,9 +25,14 @@ public class GameService {
     private boolean isStarted = false;
 
     public Map<String, Object> initGame() {
-        startGame();
-
         Map<String, Object> result = new HashMap<>();
+        try {
+            startGame();
+        } catch (IllegalStateException e) {
+            result.put("status", gameStatusUseCase.getStatus(isStarted));
+            setGameStarted(false);
+        }
+
         result.put("dealerCards", dealer.getRevealedCards());
         result.put("playerCards", player.getHand().getCards());
         result.put("gameIsFinished", !isStarted);

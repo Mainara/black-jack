@@ -59,7 +59,7 @@ public class DealerServiceTests {
         playResult.put("dealerCards", cards);
         playResult.put("gameIsFinished", true);
 
-        when(dealerPlayUseCaseMock.play()).thenReturn(playResult);
+        when(dealerPlayUseCaseMock.play(gameService)).thenReturn(playResult);
         Map<String, Object> result = dealerService.play();
         assertEquals(playResult, result);
     }
