@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 public class GameStatusUseCaseTests {
     @Autowired
-    GameStatusUseCase gameStatusUseCase;
+    private GameStatusUseCase gameStatusUseCase;
     @Autowired
-    GameInitializationUseCase gameInitializationUseCase;
+    private GameInitializationUseCase gameInitializationUseCase;
     @Autowired
-    Player player;
+    private Player player;
     @Autowired
-    Dealer dealer;
+    private Dealer dealer;
 
     @Test
     public void givenAStartedGame_whenCallingGetStatus_thenShouldReturnGameStatus() {

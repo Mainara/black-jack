@@ -1,17 +1,13 @@
 package com.blackjack.useCases;
 
-import com.blackjack.enums.Rank;
-import com.blackjack.enums.Suit;
 import com.blackjack.models.Card;
 import com.blackjack.models.Dealer;
 import com.blackjack.repositories.DealerRepository;
-import com.blackjack.services.DealerService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;

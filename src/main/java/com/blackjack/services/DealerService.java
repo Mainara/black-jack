@@ -12,8 +12,6 @@ import java.util.*;
 @Service
 public class DealerService {
     @Autowired
-    private Dealer dealer;
-    @Autowired
     private GameService gameService;
     @Autowired
     private DealerPlayUseCase dealerPlayUseCase;

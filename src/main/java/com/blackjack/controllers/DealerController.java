@@ -3,7 +3,6 @@ package com.blackjack.controllers;
 import com.blackjack.errors.ErrorResponse;
 import com.blackjack.models.Card;
 import com.blackjack.services.DealerService;
-import com.blackjack.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import java.util.Map;
 @RequestMapping("/api/dealer")
 public class DealerController {
     @Autowired
-    DealerService dealerService;
+    private DealerService dealerService;
 
     @PostMapping("/play")
     public ResponseEntity<?> play() {

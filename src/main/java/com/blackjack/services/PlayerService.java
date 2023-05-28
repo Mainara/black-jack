@@ -15,8 +15,6 @@ import java.util.Map;
 @Service
 public class PlayerService {
     @Autowired
-    private Player player;
-    @Autowired
     private  GameService gameService;
     @Autowired
     private PlayerHitUseCase playerHitUseCase;

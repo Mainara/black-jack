@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class GameInitializationUseCaseTests {
     @Autowired
-    GameInitializationUseCase gameInitializationUseCase;
+    private GameInitializationUseCase gameInitializationUseCase;
     @Autowired
-    Player player;
+    private Player player;
     @Autowired
-    Dealer dealer;
+    private Dealer dealer;
     @BeforeEach
     public void init() {
         dealer.clearHand();

@@ -17,7 +17,7 @@ import java.util.Map;
 @RequestMapping("/api/player")
 public class PlayerController {
     @Autowired
-    PlayerService playerService;
+    private PlayerService playerService;
 
     @PostMapping("/hit")
     public ResponseEntity<?> hit() {

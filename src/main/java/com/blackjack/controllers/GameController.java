@@ -17,7 +17,7 @@ import java.util.Map;
 public class GameController {
 
 	@Autowired
-	GameService gameService;
+	private GameService gameService;
 
 	@PostMapping("/init")
 	public ResponseEntity<Map<String, Object>> initGame() {
