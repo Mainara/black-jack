@@ -55,9 +55,9 @@ public class DealerControllerTests {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/dealer/play"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.dealerBusted", Matchers.equalTo(false)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.dealerCards", Matchers.hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.gameIsFinished", Matchers.equalTo(true)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dealerBusted", Matchers.equalTo(false)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dealerCards", Matchers.hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.gameIsFinished", Matchers.equalTo(true)));
     }
 
     @Test
@@ -95,6 +95,23 @@ public class DealerControllerTests {
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
+    @Test
+    public void givingAStartedGame_whenShuffle_thenReturn200() throws Exception {
+        gameService.initGame();
+        Card card = new Card(Rank.DEZ, Suit.ESPADAS);
 
+        Mockito.when(dealerService.shuffle()).thenReturn(Arrays.asList(card));
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/dealer/shuffle"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
+
+    }
+    @Test
+    public void givingNotStartedGame_whenShuffle_thenReturn403() throws Exception {
+        Mockito.when(dealerService.shuffle()).thenThrow(new IllegalStateException());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/dealer/shuffle"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
 }

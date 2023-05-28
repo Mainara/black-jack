@@ -1,55 +1,70 @@
 package com.blackjack.services;
 
+import com.blackjack.enums.Rank;
+import com.blackjack.enums.Suit;
+import com.blackjack.models.Card;
 import com.blackjack.models.Dealer;
 import com.blackjack.models.Player;
+import com.blackjack.useCases.DealerPlayUseCase;
+import com.blackjack.useCases.GameInitializationUseCase;
+import com.blackjack.useCases.GameStatusUseCase;
+import com.blackjack.useCases.GameStatusUseCaseTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class GameServiceTests {
-    @Autowired
+    @InjectMocks
     private GameService gameService;
-    @Autowired
+    @Spy
     private Dealer dealer;
-    @Autowired
+    @Spy
     private Player player;
+    @Mock
+    private GameInitializationUseCase gameInitializationUseCaseMock;
+    @Mock
+    private GameStatusUseCase gameStatusUseCaseMock;
 
     @BeforeEach
     public void init() {
-        player.clearHand();
-        dealer.clearHand();
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     public void givenNewGame_whenCallingInitGame_thenShouldReturnFirstCards() {
-        Map<String, Object> result = gameService.initGame();
-        List<Object> dealerCards = (List<Object>) result.get("dealerCards");
-        List<Object> playerCards = (List<Object>) result.get("playerCards");
+        doNothing().when(dealer).clearHand();
+        doNothing().when(player).clearHand();
 
-        assertEquals(dealerCards.size(), 1);
-        assertEquals(playerCards.size(), 2);
+        Map<String, Object> result = gameService.initGame();
+        assertTrue(result.containsKey("dealerCards"));
+        assertTrue(result.containsKey("playerCards"));
         assertTrue(result.containsKey("gameIsFinished"));
+
     }
 
     @Test
     public void givenAGame_whenCallingGetStatus_thenShouldReturnGameStatus() {
-        gameService.initGame();
-        Map<String, Object> status = gameService.getStatus();
+        Map<String, Object> returnGetStatus = new HashMap<>();
+        returnGetStatus.put("dealerPoints", 4);
+        returnGetStatus.put("playerPoints", 5);
+        returnGetStatus.put("currentWinner", "player");
 
-        String currentWinner = dealer.getHandValue() > player.getHandValue() ? "dealer" : "player";
+        when(gameStatusUseCaseMock.getStatus(false)).thenReturn(returnGetStatus);
 
-        assertEquals(dealer.getHandValue(), status.get("dealerPoints"));
-        assertEquals(player.getHandValue(), status.get("playerPoints"));
-        assertEquals(currentWinner, status.get("currentWinner"));
-
+        Map<String, Object> result = gameService.getStatus();
+        assertEquals(returnGetStatus, result);
     }
 }

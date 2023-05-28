@@ -2,8 +2,8 @@ package com.blackjack.services;
 
 import com.blackjack.models.Card;
 import com.blackjack.models.Dealer;
-import com.blackjack.models.Deck;
 import com.blackjack.useCases.DealerPlayUseCase;
+import com.blackjack.useCases.ShuffleUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,11 @@ public class DealerService {
     private GameService gameService;
     @Autowired
     private DealerPlayUseCase dealerPlayUseCase;
-
+    @Autowired
+    private ShuffleUseCase shuffleUseCase;
     public Map<String, Object> play() {
         if (gameService.isGameStarted()) {
-            return dealerPlayUseCase.play(dealer);
+            return dealerPlayUseCase.play();
         } else {
             throw new IllegalStateException("The game has not started");
         }
@@ -28,7 +29,15 @@ public class DealerService {
 
     public Card revealCard() {
         if (gameService.isGameStarted()) {
-            return dealerPlayUseCase.revealCard(dealer);
+            return dealerPlayUseCase.revealCard();
+        } else {
+            throw new IllegalStateException("The game has not started");
+        }
+    }
+
+    public List<Card> shuffle() {
+        if (gameService.isGameStarted()) {
+            return shuffleUseCase.shuffle();
         } else {
             throw new IllegalStateException("The game has not started");
         }

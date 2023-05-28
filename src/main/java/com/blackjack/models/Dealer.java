@@ -1,5 +1,7 @@
 package com.blackjack.models;
 
+import jakarta.annotation.Priority;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -24,8 +26,9 @@ public class Dealer extends Player {
         return deck;
     }
 
-    public void shuffleDeck() {
+    public List<Card> shuffleDeck() {
         Collections.shuffle(deck.getCards());
+        return deck.getCards();
     }
 
     public List<Card> getRevealedCards() {

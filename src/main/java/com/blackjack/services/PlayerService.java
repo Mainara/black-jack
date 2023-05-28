@@ -25,7 +25,7 @@ public class PlayerService {
 
     public Map<String, Object> hit() {
         if (gameService.isGameStarted()) {
-            return playerHitUseCase.hit(player, gameService);
+            return playerHitUseCase.hit(gameService);
         } else {
             throw new IllegalStateException("The game has not started");
         }
@@ -33,7 +33,7 @@ public class PlayerService {
 
     public List<Card> stand() {
         if (gameService.isGameStarted()) {
-            return playerStandUseCase.stand(player);
+            return playerStandUseCase.stand();
         } else {
             throw new IllegalStateException("The game has not started");
         }

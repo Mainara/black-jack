@@ -36,7 +36,7 @@ public class GameService {
     }
 
     public Map<String, Object> getStatus() {
-        return gameStatusUseCase.getStatus(dealer, player, isStarted);
+        return gameStatusUseCase.getStatus(isStarted);
     }
 
     private void startGame() {

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,8 +24,7 @@ public class DealerController {
     public ResponseEntity<?> play() {
         try {
             Map<String, Object> responseData = dealerService.play();
-            Response<Map<String, Object>> response = new Response<>(responseData);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(responseData, HttpStatus.OK);
         } catch (IllegalStateException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
@@ -36,6 +36,17 @@ public class DealerController {
         try {
             Card revealedCard = dealerService.revealCard();
             return new ResponseEntity<>(revealedCard, HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+            return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @PostMapping("/shuffle")
+    public ResponseEntity<?> shuffle() {
+        try {
+            List<Card> deck = dealerService.shuffle();
+            return new ResponseEntity<>(deck, HttpStatus.OK);
         } catch (IllegalStateException e) {
             ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);

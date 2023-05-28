@@ -6,63 +6,91 @@ import com.blackjack.models.Card;
 import com.blackjack.models.Dealer;
 import com.blackjack.models.Deck;
 import com.blackjack.models.Hand;
+import com.blackjack.useCases.DealerPlayUseCase;
+import com.blackjack.useCases.ShuffleUseCase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class DealerServiceTests {
 
-    @Autowired
+    @InjectMocks
     private DealerService dealerService;
+    @Mock
+    private DealerPlayUseCase dealerPlayUseCaseMock;
+    @Mock
+    private ShuffleUseCase shuffleUseCase;
     @Autowired
     private Dealer dealer;
-    @Autowired
+    @MockBean
     private GameService gameService;
 
     @BeforeEach
     public void init() {
+        MockitoAnnotations.openMocks(this);
         dealer.clearHand();
-        gameService.setGameStarted(true);
     }
 
     @Test
-    public void whenCallingPlay_thenDealerShouldAddCardToHand() {
-        assertTrue(dealer.getHand().getCards().size() == 0);
-        Card card = new Card(Rank.AS, Suit.COPAS);
-        dealer.addCardToHand(card);
-        Map<String, Object> result = dealerService.play();
-        List<Object> dealerCards = (List<Object>) result.get("dealerCards");
+    public void givenAStartedGame_whenCallingPlay_thenDealerShouldPlay() {
+        when(gameService.isGameStarted()).thenReturn(true);
+        Card card1 = new Card(Rank.REI, Suit.COPAS);
+        Card card2 = new Card(Rank.DEZ, Suit.COPAS);
+        List<Card> cards = new ArrayList<>();
+        cards.add(card1);
+        cards.add(card2);
 
-        assertTrue(dealer.getHand().getCards().size() > 0);
-        assertTrue(dealer.getHand().getCards().size() == dealerCards.size());
+        Map<String, Object> playResult = new HashMap<>();
+        playResult.put("dealerBusted", false);
+        playResult.put("dealerCards", cards);
+        playResult.put("gameIsFinished", true);
+
+        when(dealerPlayUseCaseMock.play()).thenReturn(playResult);
+        Map<String, Object> result = dealerService.play();
+        assertEquals(playResult, result);
+    }
+
+    @Test
+    public void givenNotStartedGame_whenCallingPlay_thenDealerShouldThrowException() {
+        Card card1 = new Card(Rank.REI, Suit.COPAS);
+        Card card2 = new Card(Rank.DOIS, Suit.COPAS);
+
+        dealer.addCardToHand(card1);
+        dealer.addCardToHand(card2);
+
+        assertThrows(IllegalStateException.class, () -> {
+            dealerService.play();
+        });
     }
 
     @Test
     public void whenCallingReveal_thenShouldRevealDealerCard() {
-        Card card = new Card(Rank.REI, Suit.ESPADAS);
-        card.setRevealed(false);
+        when(gameService.isGameStarted()).thenReturn(true);
 
-        dealer.addCardToHand(card);
-        Card revealedCard = dealerService.revealCard();
-        assertTrue(revealedCard.getRank().getLabel() == card.getRank().getLabel());
+        Card card1 = new Card(Rank.REI, Suit.COPAS);
+        card1.setRevealed(false);
 
+        when(dealerPlayUseCaseMock.revealCard()).thenReturn(card1);
+        Card revealResult = dealerService.revealCard();
+        assertEquals(revealResult, card1);
     }
 
     @Test
-    public void givingNoCardToReveal_whenCallingReveal_thenShouldThrowsException() {
+    public void givenNotStartedGame_whenCallingReveal_thenShouldThrowsException() {
         Card card = new Card(Rank.REI, Suit.ESPADAS);
         dealer.addCardToHand(card);
 
@@ -70,4 +98,23 @@ public class DealerServiceTests {
             dealerService.revealCard();
         });
     }
+
+    @Test
+    public void givingAStartedGame_whenCallingShuffle_thenShouldShuffle() {
+        when(gameService.isGameStarted()).thenReturn(true);
+
+        Card card1 = new Card(Rank.REI, Suit.COPAS);
+
+        when(shuffleUseCase.shuffle()).thenReturn(Arrays.asList(card1));
+        List<Card> shuffleResult = dealerService.shuffle();
+        assertEquals(shuffleResult, Arrays.asList(card1));
+    }
+
+    @Test
+    public void givenNotStartedGame_whenCallingShuffle_thenShouldThrowsException() {
+        assertThrows(IllegalStateException.class, () -> {
+            dealerService.shuffle();
+        });
+    }
+
 }
