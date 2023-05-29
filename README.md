@@ -22,7 +22,7 @@ gradle clean build
 gradle bootRun
 ```
 
-### With docker 
+### With docker
 First, make sure you have docker installed:
 ```bash
 docker --version
@@ -255,7 +255,7 @@ http://localhost:8080/
 </ul>
 </details>
 
-NOTE: To ensure that only initialized endpoints can be accessed before the game begins, any endpoint other than 
+NOTE: To ensure that only initialized endpoints can be accessed before the game begins, any endpoint other than
 **/api/game/init** will be blocked with an error message and a status of 403.
 
 I have provided a [Postman collection](Blackjack.postman_collection.json) to facilitate the testing of endpoints.
